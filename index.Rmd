@@ -1,5 +1,6 @@
 ---
 title: "IODS course project"
+author: "Young Kyu Shin"
 output:
   html_document:
     theme: cosmo
