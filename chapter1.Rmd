@@ -6,4 +6,4 @@
 #I am exicted to learn about the R program, but it looks very complicated to me at the moment. However, I hope to get used to it as soon as possible and become an excellent user of R in the near futuer#.
 
 My URL is as follows:
-https://github.com/shinyk0514/IODS-project
+https://github.com/shinyk0514/IODS-project    
