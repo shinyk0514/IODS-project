@@ -117,6 +117,8 @@ summary(ex2)
  Max.   :4.333   Max.   :33.00 
 
 
+
+
 *To begin with, I chose "attitude", "stra" and "surf" as explanatory variables and fitted a regression model(model1) with them as follows. However, as the coefficient of surf is not significant and its p-value is too high, I fitted another model(model2) withouth the variable. In model2, attitude and stra have an positive effect on points. The coefficient of attitude is significant at the 0.001% significance level and that of stra is significant at the 10% significance level. Regarding R-squrare, model2's adjusted R-square is 0.1951, which is a bit higher than model1's one accounting for 0.1927.*
 
 ### Fitting regression models ###
