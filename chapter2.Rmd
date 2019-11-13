@@ -10,18 +10,22 @@
 *To conduct data wrangling, I read the full learning2014 data and explored the structur and dimentions of the data by using the following codes.*
 
 ## Data wrangling ##
+```{r}
 lrn14 <- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
 
 dim(lrn14)
 
 str(lrn14)
+```
+
 
 *To create a dataset for analysis, I first scaled all combination variables. After that, I kept only columns required for anlaysis, excluded unsuitable cases and modified column names by using the following codes.* 
 
 ### Scaling variables to the original scales ###
+
+```{r}
 lrn14$Attitude / 10
 lrn14$attitude <- lrn14$Attitude / 10
-
 library(dplyr)
 
 deep_questions <- c("D03", "D11", "D19", "D27", "D07", "D14", "D22", "D30","D06",  "D15", "D23", "D31")
@@ -36,69 +40,68 @@ lrn14$surf <- rowMeans(surface_columns)
 
 strategic_columns <- select(lrn14, one_of(strategic_questions))
 lrn14$stra <- rowMeans(strategic_columns)
+```
+
+
 
 ### Keeping columns needed for analysis ###
+```{r}
 keep_columns <- c("gender", "Age", "attitude", "deep", "stra", "surf", "Points")
 learning2014 <- select(lrn14, one_of(keep_columns))
 str(learning2014)
+```
+
+
 
 ### Modifying column names ###
+```{r}
 colnames(learning2014)[2] <- "age"
 colnames(learning2014)[7] <- "points"
 learning2014 <- filter(learning2014, points > 0)
 
 str(learning2014)
+```
 
- 
 
 *To fit regression models, I read and explore the data set as follows:*
 ## Data analysis ##
+
+```{r}
 ex2 <- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/learning2014.txt", sep=",", header=TRUE)
+```
 
 ### Exploring data ###
+```{r}
 str(ex2)
 dim(ex2)
+```
+
 
 *The structure of the data is as follows: The number of observations is 166 and the number of varaibles is 7.*
-> str(ex2)
-'data.frame':	166 obs. of  7 variables:
- $ gender  : Factor w/ 2 levels "F","M": 1 2 1 2 2 1 2 1 2 1 ...
- $ age     : int  53 55 49 53 49 38 50 37 37 42 ...
- $ attitude: num  3.7 3.1 2.5 3.5 3.7 3.8 3.5 2.9 3.8 2.1 ...
- $ deep    : num  3.58 2.92 3.5 3.5 3.67 ...
- $ stra    : num  3.38 2.75 3.62 3.12 3.62 ...
- $ surf    : num  2.58 3.17 2.25 2.25 2.83 ...
- $ points  : int  25 12 24 10 22 21 21 31 24 26 ...
-> dim(ex2)
-[1] 166   7
 
 *I created plots showing the distributions of the variables and the relationships between them by using the following codes. According to the plot and summary information, "points" is most highly correlated with "attitude", whereas it is least correlated with "deep".*  
 
 ### Graphical overview and summaries ###
+```{r}
 library(ggplot2)
 ggplot(ex2)
 pairs(ex2[-1])
 
-library(GGally)
-library(ggplot2)
-
-p <- ggpairs(ex2, mapping = aes(), lower = list(combo = wrap("facethist", bins = 20)))
-p
-
-```{r}
-plot(ex2)
 ```
 
-
 ```{r}
-p <- ggpairs(ex2, mapping = aes(), lower = list(combo = wrap("facethist", bins = 20)))
-```
-```{r}
+p <- ggpairs(ex2, maaping = aes(), lower = list(combo = wrap("facethist", bins = 20)))
 p
 ```
 
 
+
+
+```{r}
 summary(ex2)
+```
+
+
 > str(ex2)
 'data.frame':	166 obs. of  7 variables:
  $ gender  : Factor w/ 2 levels "F","M": 1 2 1 2 2 1 2 1 2 1 ...
@@ -136,55 +139,21 @@ summary(ex2)
 
 ### Fitting regression models ###
 ### explanatory variables: attitude, stra, surf
+```{r}
 model1 <- lm(points ~ attitude + stra + surf, data = ex2)
 summary(model1)
 model2 <- lm(points ~ attitude + stra, data = ex2)
 summary(model2)
-
-> model1 <- lm(points ~ attitude + stra + surf, data = ex2)
-> summary(model1)
-Call:
-lm(formula = points ~ attitude + stra + surf, data = ex2)
-Residuals:
-     Min       1Q   Median       3Q      Max 
--17.1550  -3.4346   0.5156   3.6401  10.8952 
-Coefficients:
-            Estimate Std. Error t value Pr(>|t|)    
-(Intercept)  11.0171     3.6837   2.991  0.00322 ** 
-attitude      3.3952     0.5741   5.913 1.93e-08 ***
-stra          0.8531     0.5416   1.575  0.11716    
-surf         -0.5861     0.8014  -0.731  0.46563    
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-Residual standard error: 5.296 on 162 degrees of freedom
-Multiple R-squared:  0.2074,	Adjusted R-squared:  0.1927 
-F-statistic: 14.13 on 3 and 162 DF,  p-value: 3.156e-08
-
-> model2 <- lm(points ~ attitude + stra, data = ex2)
-> summary(model2)
-Call:
-lm(formula = points ~ attitude + stra, data = ex2)
-Residuals:
-     Min       1Q   Median       3Q      Max 
--17.6436  -3.3113   0.5575   3.7928  10.9295 
-Coefficients:
-            Estimate Std. Error t value Pr(>|t|)    
-(Intercept)   8.9729     2.3959   3.745  0.00025 ***
-attitude      3.4658     0.5652   6.132 6.31e-09 ***
-stra          0.9137     0.5345   1.709  0.08927 .  
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-Residual standard error: 5.289 on 163 degrees of freedom
-Multiple R-squared:  0.2048,	Adjusted R-squared:  0.1951 
-F-statistic: 20.99 on 2 and 163 DF,  p-value: 7.734e-09
+```
 
 
 *I created diagnostic plots including Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage as follows:*
 ### Producing diagnostic plots ###
 #### Residuals vs Fitted Values, Normal QQ-plot and Residuals vs Leverage ####
+
+```{r}
 par(mfrow = c(2,2))
 plot(model2, which = c(1,2,5))
-```{r}
 plot(model2)
 ```
 
