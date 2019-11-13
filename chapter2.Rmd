@@ -85,6 +85,19 @@ library(ggplot2)
 p <- ggpairs(ex2, mapping = aes(), lower = list(combo = wrap("facethist", bins = 20)))
 p
 
+```{r}
+plot(ex2)
+```
+
+
+```{r}
+p <- ggpairs(ex2, mapping = aes(), lower = list(combo = wrap("facethist", bins = 20)))
+```
+```{r}
+p
+```
+
+
 summary(ex2)
 > str(ex2)
 'data.frame':	166 obs. of  7 variables:
@@ -171,3 +184,7 @@ F-statistic: 20.99 on 2 and 163 DF,  p-value: 7.734e-09
 #### Residuals vs Fitted Values, Normal QQ-plot and Residuals vs Leverage ####
 par(mfrow = c(2,2))
 plot(model2, which = c(1,2,5))
+```{r}
+plot(model2)
+```
+
