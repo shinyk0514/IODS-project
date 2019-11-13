@@ -64,6 +64,7 @@ str(learning2014)
 
 
 *To fit regression models, I read and explore the data set as follows:*
+
 ## Data analysis ##
 
 ```{r}
