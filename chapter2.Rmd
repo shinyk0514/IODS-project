@@ -84,6 +84,7 @@ dim(ex2)
 ### Graphical overview and summaries ###
 ```{r}
 library(ggplot2)
+library(GGally)
 ggplot(ex2)
 pairs(ex2[-1])
 
