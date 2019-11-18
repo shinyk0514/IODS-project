@@ -28,6 +28,7 @@ H4: The better family relationships are, the less the probability that a student
 ### Task 4: Exploring the chosen variables ###
 #### Cross-tabulations ####
 ```{r}
+library(dplyr); library(ggplot2)
 alc %>% group_by(age, high_use) %>% summarise(count = n())
 alc %>% group_by(Pstatus, high_use) %>% summarise(count = n())
 alc %>% group_by(higher, high_use) %>% summarise(count = n())
