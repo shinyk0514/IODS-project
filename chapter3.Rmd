@@ -2,7 +2,7 @@
 
 ## Data wrangling ##
 
-https://github.com/shinyk0514/IODS-project
+https://github.com/shinyk0514/IODS-project/blob/master/create_alc.R
 
 
 ## Data analysis ##
