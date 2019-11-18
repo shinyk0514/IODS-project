@@ -1,4 +1,126 @@
 # Logistic regression #
 
-## Data Analysis ##
+## Data wrangling ##
+
+https://github.com/shinyk0514/IODS-project
+
+
+## Data analysis ##
+
+### Task 2: Reading the data and printing out the names of variables ###
+
+```{r}
+alc <- read.csv("C:\\Users\\Young Shin\\Documents\\IODS-project\\data\\alc.csv", sep = ",")
+colnames(alc)
+```
+
+* The dataset provides the information on alcohol consumption of the students who attended both courses of mathematics and Portuguese language. It has 382 observations of 36 variables as shown above.*
+
+
+### Task 3: Choosing four variables and setting up hypetheses ###
+I am interested in the variables, age, Pstatus, higher and famrel. Thus, my hypotheses are as follows:
+H1: Age increases the probability that a student becomes a heavy alcohol consumer.
+H2: Living with parent decreases the probability that a student becomes a heavy alcohol consumer.
+H3: Willingness to take higher education decreases the probability that a student becomes a heavy alcohol consumer.
+H4: The better family relationships are, the less the probability that a student becomes a heavy alcohol consumer.
+
+
+### Task 4: Exploring the chosen variables ###
+#### Cross-tabulations ####
+```{r}
+alc %>% group_by(age, high_use) %>% summarise(count = n())
+alc %>% group_by(Pstatus, high_use) %>% summarise(count = n())
+alc %>% group_by(higher, high_use) %>% summarise(count = n())
+alc %>% group_by(famrel, high_use) %>% summarise(count = n())
+```
+
+#### Bar plots ####
+```{r}
+library(tidyr)
+chosen_var <- c("age", "sex", "Pstatus", "higher", "high_use", "famrel")
+alc <- dplyr::select(alc, one_of(chosen_var))
+gather(alc) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
+```
+
+#### Box plots ####
+```{r}
+library(tidyr); library(dplyr); library(ggplot2); library(corrplot); library(boot)
+par(mfrow=c(1,5))
+boxplot(alc$age~alc$high_use, main="Age")
+boxplot(alc$famrel~alc$high_use, main="Family relationships")
+```
+
+#### Interpretation ####
+According to the tabulations and plots above, it is probalbe that age would increase the possibility that the variables, age, willingness to take higher education and family relations would be associated with high level of alcohol consumption. However, it does not seem that parent's cohabitation has an association with alcohol consumption.
+
+
+
+### Task 5: Fitting logistic regression ###
+#### Model ####
+```{r}
+m <- glm(alc$high_use ~ alc$age + alc$higher + alc$Pstatus + alc$famrel, data = alc, family = "binomial")
+```
+
+#### Summary ####
+```{r}
+summary(m)
+```
+
+#### Coefficients, OR and confidenc intervals ####
+```{r}
+coef(m)
+OR <- coef(m) %>% exp
+CI <- confint(m) %>% exp
+cbind(OR, CI)
+```
+
+#### Interpretation ####
+The results about coefficients display that age and family relationships are significantly associated with high level of alcohol consumption, while other explanatory variables are not. Therefore, H2 and H4 are supported by the findings, but H1 and H3 are rejected. In terms of OR, it is concluded that the chance of becoming a heavy alcohol consumer increase by 21.3% as getting one year older and decreased by 23.9% as family relationships are getting better.
+
+
+### Task 6: Prediction ###
+#### Probabilities ####
+```{r}
+probabilities <- predict(m, type = "response")
+```
+#### adding the predicted probabilities to 'alc' ####
+```{r}
+alc <- mutate(alc, probability = probabilities)
+```
+#### using the probabilities to make a prediction of high_use ####
+```{r}
+alc <- mutate(alc, prediction = probability > 0.5)
+```
+
+#### seeing the last ten original classes, predicted probabilities, and class predictions ####
+```{r}
+select(alc, age, higher, Pstatus, famrel, probability, prediction) %>% tail(10)
+```
+
+#### tabulating the target variable versus the predictions ####
+```{r}
+table(high_use = alc$high_use, prediction = alc$prediction)
+```
+
+#### initializing a plot of 'high_use' versus 'probability' in 'alc' ####
+```{r}
+g <- ggplot(alc, aes(x = probability, y = high_use, col = prediction))
+g + geom_point()
+```
+
+#### defining a loss function ####
+```{r}
+loss_func <- function(class, prob) {
+  n_wrong <- abs(class - prob) > 0.5
+  mean(n_wrong)
+}
+```
+
+#### calling loss_func to compute the average number of wrong predictions in the (training) data ####
+```{r}
+loss_func(class = alc$high_use, prob = alc$probability)
+```
+
+
+
 
