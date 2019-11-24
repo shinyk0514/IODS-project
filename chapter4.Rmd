@@ -1,0 +1,27 @@
+# Clustering and classification #
+
+## Data wrangling for exercise 5 ##
+
+https://github.com/shinyk0514/IODS-project/blob/master/data/create_human.R
+
+
+## Data analysis ##
+
+### Loading and exploring the Boston data ###
+
+```{r}
+library(MASS)
+data("Boston")
+str(Boston)
+summary(Boston)
+```
+
+
+### Graphical overview and summary of variables ###
+
+```{r}
+library(corrplot)
+cor_matrix<-cor(Boston)
+corrplot(cor_matrix, type = "lower", method = "circle")
+```
+
