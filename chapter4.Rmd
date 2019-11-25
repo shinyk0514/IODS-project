@@ -11,17 +11,105 @@ str(Boston)
 summary(Boston)
 ```
 
+* Boston dataset consists of 506 observations of 14 variables.*
+
 
 ### Graphical overview and summary of variables ###
 
 ```{r}
 library(corrplot)
 cor_matrix<-cor(Boston)
-corrplot(cor_matrix, type = "lower", method = "circle")
+cor_matrix
+corrplot(cor_matrix, type='upper', method = "circle", cl.pos="b", tl.pos="d", tl.cex=0.6)
+```
+
+* The corrlations plot shows correlations between the fourteen varaibles in Bostron dataset. Negative correlations are indicated in red and positive ones in blue. According to the plot and correlation cefficients above, we can see that many variables are highly correalated.*
+
+
+
+### Standardizing the dataset and creating a categorical variable ###
+```{r}
+boston_scaled <- scale(Boston)
+summary(boston_scaled)
+```
+* By scaling all variables, their mean values became zero.*
+
+```{r}
+class(boston_scaled)
+boston_scaled <- as.data.frame(boston_scaled)
+bins <- quantile(boston_scaled$crim)
+crime <- cut(boston_scaled$crim, breaks=bins, include.lowest = TRUE, labels=c("low", "med_low", "med_high", "high"))
+table(crime)
+boston_scaled <- dplyr::select(boston_scaled, -crim)
+boston_scaled <- data.frame(boston_scaled, crime)
+```
+* To create a categorical variable of the crime rate by using the quantiles, I used the commands above. In addition, I replaced the old variable with the new categorical one.*
+
+
+### Dividing the dataset to train and test ones ###
+```{r}
+n <- nrow(boston_scaled)
+ind <- sample(n, size = n * 0.8)
+train <- boston_scaled[ind,]
+test <- boston_scaled[-ind,]
+
+dim(test)
+dim(train)
+```
+
+
+### Fitting LDA model ###
+```{r}
+lda.fit <- lda(crime ~ ., data=train)
+lda.fit
+
+lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "orange", tex = 0.75, choices = c(1,2)){
+  heads <- coef(x)
+  arrows(x0 = 0, y0 = 0,
+         x1 = myscale * heads[, choices[1]],
+         y1 = myscale * heads[, choices[2]], col = color, length = arrow_heads)
+  text(myscale * heads[,choices], labels = row.names(heads), 
+       cex = tex, col = color, pos=3)
+}
+
+classes <- as.numeric(train$crime)
+
+plot(lda.fit, dimen = 2, col = classes, pch = classes)
+lda.arrows(lda.fit, myscale = 1)
 ```
 
 
 
+### Predicting LDA on the test data ###
+```{r}
+n <- nrow(boston_scaled)
+ind <- sample(n, size = n * 0.8)
+train <- boston_scaled[ind,]
+test <- boston_scaled[-ind,]
+
+correct_classes <- test$crime
+test <- dplyr::select(test, -crime)
+lda.pred <- predict(lda.fit, newdata = test)
+table(corret=correct_classes, predicted=lda.pred$class)
+percent <- mean(correct_classes==lda.pred$class)
+percent
+```
+* The results display that the model predicts 75.5% of the test dataset correctly. For the cases of low and high, the accuracy is very high, but it is hard to say that the prediction is highly accurate for the med_low and med_high. * 
+
+
+### Running K-means ###
+```{r}
+library(MASS)
+data("Boston")
+dim(Boston)
+
+scaled_k <- as.data.frame(scale(Boston))
+eu_dist <- dist(scaled_k)
+summary(eu_dist)
+
+km <- kmeans(scaled_k, centers = 3)
+pairs(scaled_k, col=km$cluster)
+```
 
 
 
