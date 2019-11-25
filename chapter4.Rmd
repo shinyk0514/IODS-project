@@ -11,7 +11,7 @@ str(Boston)
 summary(Boston)
 ```
 
-* Boston dataset consists of 506 observations of 14 variables.*
+*Boston dataset consists of 506 observations of 14 variables.*
 
 
 ### Graphical overview and summary of variables ###
@@ -23,7 +23,7 @@ cor_matrix
 corrplot(cor_matrix, type='upper', method = "circle", cl.pos="b", tl.pos="d", tl.cex=0.6)
 ```
 
-* The corrlations plot shows correlations between the fourteen varaibles in Bostron dataset. Negative correlations are indicated in red and positive ones in blue. According to the plot and correlation cefficients above, we can see that many variables are highly correalated.*
+*The corrlations plot shows correlations between the fourteen varaibles in Bostron dataset. Negative correlations are indicated in red and positive ones in blue. According to the plot and correlation cefficients above, we can see that many variables are highly correalated.*
 
 
 
@@ -32,7 +32,7 @@ corrplot(cor_matrix, type='upper', method = "circle", cl.pos="b", tl.pos="d", tl
 boston_scaled <- scale(Boston)
 summary(boston_scaled)
 ```
-* By scaling all variables, their mean values became zero.*
+*By scaling all variables, their mean values became zero.*
 
 ```{r}
 class(boston_scaled)
@@ -43,7 +43,7 @@ table(crime)
 boston_scaled <- dplyr::select(boston_scaled, -crim)
 boston_scaled <- data.frame(boston_scaled, crime)
 ```
-* To create a categorical variable of the crime rate by using the quantiles, I used the commands above. In addition, I replaced the old variable with the new categorical one.*
+*To create a categorical variable of the crime rate by using the quantiles, I used the commands above. In addition, I replaced the old variable with the new categorical one.*
 
 
 ### Dividing the dataset to train and test ones ###
@@ -94,7 +94,7 @@ table(corret=correct_classes, predicted=lda.pred$class)
 percent <- mean(correct_classes==lda.pred$class)
 percent
 ```
-* The results display that the model predicts 75.5% of the test dataset correctly. For the cases of low and high, the accuracy is very high, but it is hard to say that the prediction is highly accurate for the med_low and med_high. * 
+*The results display that the model predicts 75.5% of the test dataset correctly. For the cases of low and high, the accuracy is very high, but it is hard to say that the prediction is highly accurate for the med_low and med_high. * 
 
 
 ### Running K-means ###
