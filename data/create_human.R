@@ -69,3 +69,40 @@ write.csv(human, "C:\\Users\\Young Shin\\Documents\\IODS-project\\data\\human.cs
 
 
 
+# Young Kyu Shin, December 2, 2019 data wrangling for exercise 5: Dimensionality reduction techniques #
+
+## Loading the 'human' data ##
+human <- read.table("C:\\Users\\Young Shin\\Documents\\IODS-project\\data\\human.csv", sep=",", header=TRUE)
+
+
+## Transfroming GNI variable to numeric ##
+library(stringr)
+library(dplyr)
+str(human$GNI)
+human <- mutate(human, GNI=str_replace(human$GNI, pattern=",", replace="") %>% as.numeric)
+
+
+## Excluding unnecessary variables ##
+keep <- c("country", "edu2F", "labourF", "life_expectancy", "schooling_yrs", "GNI", "maternal_mortal", "adol_birthrate", "parliamentF")
+human <- select(human, one_of(keep))
+human <- filter(human, complete.cases(human))
+
+
+## Removing all rows with missing values ##
+human <- filter(human, complete.cases(human))
+
+
+## Removing the observations related to regions instead of countries ##
+last <- nrow(human) - 7
+human <- human[1:last, ]
+
+
+## Defining the row names and removing the country name cloumn ##
+rownames(human) <- human$country
+human <- select(human, -country)
+dim(human)
+###Now the dataset has 155 obs. of 8 variables.###
+
+
+## Saving the human data in my data folder ##
+write.csv(human, file = "C:\\Users\\Young Shin\\Documents\\IODS-project\\data\\human.csv", eol = "\r", na = "NA", row.names = FALSE)
