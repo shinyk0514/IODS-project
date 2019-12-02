@@ -43,17 +43,43 @@ biplot(pca_human_std, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppin
 ```
 *The result of PCA on the standardized variables displays that PC1 explains 53.6% of the variance and PC2 captures 16.2%. Thus, the two PCs explains about 70% of the total varance. As a result, this result is different from that of PCA using the non-standardized variables. The difference is caused by the differences in units of variables. In the first model, as variables use different units, the gaps in their values are large. However, in the second model, as those become standardized, every variable has a normal distribution with a mean of 0.*
 
-*According to the plot, expected years of education, GNI, life expectancy at birth, the raio of female to male populations with secondary education are highly correlated in a positive manner, but those variables are negatively correlated with maternal motality ratio and adolescent birth rate. On the other hand, the ratio of female labour labour participation to male and the pecentage of female parliament members are highly correlated but not associated with other variables.* 
-
+*According to the plot, expected years of education, GNI per capita, life expectancy at birth, the ratio of female to male populations with secondary education are highly correlated in a positive manner, but those variables are negatively correlated with maternal motality ratio and adolescent birth rate. On the other hand, the ratio of female labour labour participation to male and the pecentage of female parliament members are highly correlated but not associated with other variables.* 
 
 
 ### Task 4: Interpretations ###
-
-
+*According to the result of PCA based on the standardized variables and its biplot, PC1 is involved in expected years of schooling, life expectancy at birth, GNI per capita and the ratio of female to male populations with secondary education, whereas PC2 is drawn from the ratio of female labour labour participation to male and the pecentage of female parliament members. Therefore, it seems that PC1 explains the extent to which a country is developed and PC2 shows how gender equality is achieved in a country.*
 
 
 ### Task 5: MCA ###
 ```{r}
+library(FactoMineR)
+library(tidyr)
+library(ggplot2)
+data(tea)
+str(tea)
+dim(tea)
+```
 
+*I will analyze 300 observations of 6 variables, Tea, How, how, suger, where and lunch.*
+```{r}
+library(dplyr)
+library(tidyr)
+keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
+tea_time <- select(tea, one_of(keep_columns))
+summary(tea_time)
+str(tea_time)
+dim(tea_time)
+gather(tea_time) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+```
+
+```{r}
+mca <- MCA(tea_time, graph = FALSE)
+summary(mca)
+
+```
+*According to the MCA result, Dimensions 1 and 2 explain about 29.5% of the variance in the data. The biplot of the analysis is diplayed below.*
+
+```{r}
+plot(mca, invisible=c("ind"), habillage = "quali")
 ```
 
