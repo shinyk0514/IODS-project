@@ -1,0 +1,59 @@
+# Dimensionality reduction techniques #
+
+## Data wrangling ##
+
+https://github.com/shinyk0514/IODS-project/blob/master/data/create_human.R
+
+
+## Data analysis ##
+
+### Task 1: Graphical overview and summary of the data ###
+
+```{r}
+human <- read.csv("C:\\Users\\Young Shin\\Documents\\IODS-project\\data\\human.csv")
+str(human)
+
+library(GGally)
+ggpairs(human)
+
+library(dplyr)
+summary(human)
+```
+*The dataset has 155 observations of 8 variables, which are the raio of female to male populations with secondary education (edu2F_M), the ratio of female labour labour participation to male (labourF_M), life expectancy at birth (life_expectancy), expected years of education (schooling_yrs), Gross National Income GNI per capita (GNI), maternal motality ratio (maternal_motality), adolescent birth rate (adol_birthrate) and the pecentage of female parliament members (parliamentF).* 
+
+
+
+### Task 2: PCA on the non-standardized human data ###
+```{r}
+pca_human <- prcomp(human)
+summary(pca_human)
+
+biplot(pca_human, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
+```
+*The result of PCA on the non-standardized variables shows that PC1 explains all of the variance between the variables. It seems that such a result is because GNI has larger variance than others*
+
+
+### Task 3: PCA on the standardized human data ###
+```{r}
+human_std <- scale(human)
+summary(human_std)
+pca_human_std <- prcomp(human_std)
+summary(pca_human_std)
+biplot(pca_human_std, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
+```
+*The result of PCA on the standardized variables displays that PC1 explains 53.6% of the variance and PC2 captures 16.2%. Thus, the two PCs explains about 70% of the total varance. As a result, this result is different from that of PCA using the non-standardized variables. The difference is caused by the differences in units of variables. In the first model, as variables use different units, the gaps in their values are large. However, in the second model, as those become standardized, every variable has a normal distribution with a mean of 0.*
+
+*According to the plot, expected years of education, GNI, life expectancy at birth, the raio of female to male populations with secondary education are highly correlated in a positive manner, but those variables are negatively correlated with maternal motality ratio and adolescent birth rate. On the other hand, the ratio of female labour labour participation to male and the pecentage of female parliament members are highly correlated but not associated with other variables.* 
+
+
+
+### Task 4: Interpretations ###
+
+
+
+
+### Task 5: MCA ###
+```{r}
+
+```
+
