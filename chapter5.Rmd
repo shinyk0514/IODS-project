@@ -62,10 +62,9 @@ dim(tea)
 
 *I will analyze 300 observations of 6 variables, Tea, How, how, suger, where and lunch.*
 ```{r}
-library(dplyr)
 library(tidyr)
 keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
-tea_time <- select(tea, one_of(keep_columns))
+tea_time <- dplyr::select(tea, one_of(keep_columns))
 summary(tea_time)
 str(tea_time)
 dim(tea_time)
