@@ -65,14 +65,14 @@ glimpse(human)
 ## Saving ##
 
 write.table(human)
-write.csv(human, "C:\\Users\\Young Shin\\Documents\\IODS-project\\data\\human.csv")
+write.csv(human, "C:\\Users\\Young Shin\\Documents\\IODS-project\\data\\human_ex4.csv")
 
 
 
 # Young Kyu Shin, December 2, 2019 data wrangling for exercise 5: Dimensionality reduction techniques #
 
 ## Loading the 'human' data ##
-human <- read.table("C:\\Users\\Young Shin\\Documents\\IODS-project\\data\\human.csv", sep=",", header=TRUE)
+human <- read.table("C:\\Users\\Young Shin\\Documents\\IODS-project\\data\\human_ex4.csv", sep=",", header=TRUE)
 
 
 ## Transfroming GNI variable to numeric ##
@@ -83,7 +83,7 @@ human <- mutate(human, GNI=str_replace(human$GNI, pattern=",", replace="") %>% a
 
 
 ## Excluding unnecessary variables ##
-keep <- c("country", "edu2F", "labourF", "life_expectancy", "schooling_yrs", "GNI", "maternal_mortal", "adol_birthrate", "parliamentF")
+keep <- c("country", "edu2F_M", "labourF_M", "life_expectancy", "schooling_yrs", "GNI", "maternal_mortal", "adol_birthrate", "parliamentF")
 human <- select(human, one_of(keep))
 human <- filter(human, complete.cases(human))
 
