@@ -81,5 +81,44 @@ anova(fit)
 ```
 
 
+
 ### Analysis using BPRS ###
+
+#### Reading BPRS ####
+```{r}
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+bprsl <- read.csv(file = "C:\\Users\\Young Shin\\Documents\\IODS-project\\data\\bprslong.csv", row.names = 1)
+```
+
+
+#### Individuals on the plot ####
+```{r}
+ggplot(bprsl, aes(x = weeks, y = bprs, group = subject)) + geom_line() + facet_grid(. ~ treatment, labeller = label_both) 
+```
+
+
+#### Regression model ####
+```{r}
+bprs_reg <- lm(bprs ~ weeks + treatment, data = bprsl)
+summary(bprs_reg)
+```
+
+#### Random intercept model ####
+```{r}
+
+```
+
+
+#### Random intercetp and random slope model ####
+```{r}
+
+```
+
+
+#### Random intercetp and random slope model with interaction ####
+```{r}
+
+```
 
