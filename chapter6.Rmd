@@ -15,6 +15,7 @@ https://github.com/shinyk0514/IODS-project/blob/master/data/meet_and_repeat.R
 library(ggplot2)
 library(tidyr)
 library(dplyr)
+rats <- read.csv(file = "C:\\Users\\Young Shin\\Documents\\IODS-project\\data\\rats.csv", row.names = 1)
 ratsl <- read.csv(file = "C:\\Users\\Young Shin\\Documents\\IODS-project\\data\\ratslong.csv", row.names = 1)
 ```
 
@@ -65,16 +66,22 @@ ggplot(ratsl8s, aes(x=Group, y = mean)) + geom_boxplot() + stat_summary(fun.y = 
 #### Creating new data by filtering the outlier ####
 ```{r}
 glimpse(ratsl8s)
-ratsl8s1 <- filter(ratsl8s, Group==1 & mean>260 | Group==2 & mean<550 | Group==3 & mean>500)
+ratsl8s1 <- filter(ratsl8s, Group==1 & mean>250 | Group==2 & mean<550 | Group==3 & mean>500)
 ggplot(ratsl8s1, aes(x=Group, y = mean)) + geom_boxplot() + stat_summary(fun.y = "mean", geom = "point", shape=23, size=4, fill = "white")
 ```
 
 
-#### ANOVA ####
+#### Adding baseline and ANOVA test ####
 ```{r}
+ratsl8s2 <- ratsl8s %>% 
+  mutate(baseline = rats$WD1)
+fit <- lm(mean ~ baseline + Group, data = ratsl8s2)
+summary(fit)
+anova(fit)  
 
 
 ```
+*The result of the ANOVA test displays that there is no significant difference between groups.*
 
 
 
