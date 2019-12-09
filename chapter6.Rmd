@@ -1,0 +1,11 @@
+# Analysis of longitudinal data #
+
+## Data wrangling ##
+
+https://github.com/shinyk0514/IODS-project/blob/master/data/meet_and_repeat.R
+
+
+## Data analysis ##
+
+### 
+
