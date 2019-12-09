@@ -72,11 +72,7 @@ ggplot(ratsl8s1, aes(x=Group, y = mean)) + geom_boxplot() + stat_summary(fun.y =
 
 #### ANOVA ####
 ```{r}
-str(ratsl)
-ratsl8s2 <- ratsl8s %>%
-  mutate(baseline = ratsl$WD1)
-fit <- lm(mean ~ baseline + Group, data = ratsl8s2)
-anova(fit)
+
 
 ```
 
@@ -104,21 +100,35 @@ ggplot(bprsl, aes(x = weeks, y = bprs, group = subject)) + geom_line() + facet_g
 bprs_reg <- lm(bprs ~ weeks + treatment, data = bprsl)
 summary(bprs_reg)
 ```
+*The result of regression model above shows that weeks variable have a significantly negative effect on bprs, whereas treatment varable does not.*
+
 
 #### Random intercept model ####
 ```{r}
-
+library(lme4)
+bprs_ref1 <- lmer(bprs ~ weeks + treatment + (1|subject), data = bprsl, REML=FALSE)
+summary(bprs_ref1)
 ```
+*The result of the random intercetp model above displays that weeks variable significantly affects the dependent variable, but treatment variable does not. According to the estimates of random effects, we can conclude that these intercepts vary by subject, as the standard deviation of the variance appears significantly different from zero.*
 
 
 #### Random intercetp and random slope model ####
 ```{r}
+bprs_ref2 <- lmer(bprs ~ weeks + treatment + (weeks|subject), data = bprsl, REML=FALSE)
+summary(bprs_ref2)
 
 ```
+*The fixed effects part shows very similar result to that of the model above. As the standard deviation for coefficients on weeks is 8.05, we can say that there exists significant week-to-week variation in the slope coefficients.* 
 
 
 #### Random intercetp and random slope model with interaction ####
 ```{r}
-
+bprs_ref3 <- lmer(bprs ~ weeks * treatment + (weeks|subject), data = bprsl, REML=FALSE)
+summary(bprs_ref3)
 ```
 
+#### ANOVA to compare the two models ####
+```{r}
+anova(bprs_ref2, bprs_ref3)
+```
+*The result of ANOVA demonstrates that the model including interaction does not fit significantly better than the random intercept and random slope model.*
